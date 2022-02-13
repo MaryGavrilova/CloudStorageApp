@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.netology.cloudstorage.model.CloudFile;
-import ru.netology.cloudstorage.model.CloudFileInfo;
+import ru.netology.cloudstorage.dto.CloudFileInfo;
 import ru.netology.cloudstorage.model.User;
 
 import java.util.List;

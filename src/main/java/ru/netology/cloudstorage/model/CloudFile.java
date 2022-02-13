@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Objects;
 
+// table with files' information
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,8 +30,8 @@ public class CloudFile {
     @Column(nullable = false)
     protected String contentType;
 
-    @Column(columnDefinition = "int check(size >-1)")
-    protected int size;
+    @Column(columnDefinition = "BIGINT check(size >-1)")
+    protected long size;
 
     @Lob
     @Column(name = "file", columnDefinition = "BLOB")
@@ -37,4 +40,19 @@ public class CloudFile {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     protected User user;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CloudFile cloudFile = (CloudFile) o;
+        return id == cloudFile.id && size == cloudFile.size && filename.equals(cloudFile.filename) && Objects.equals(originalFilename, cloudFile.originalFilename) && Objects.equals(contentType, cloudFile.contentType) && Arrays.equals(bytes, cloudFile.bytes);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, filename, originalFilename, contentType, size);
+        result = 31 * result + Arrays.hashCode(bytes);
+        return result;
+    }
 }
