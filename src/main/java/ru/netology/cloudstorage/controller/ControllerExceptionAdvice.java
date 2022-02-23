@@ -2,7 +2,6 @@ package ru.netology.cloudstorage.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -52,9 +51,9 @@ public class ControllerExceptionAdvice {
         return error;
     }
 
-    @ExceptionHandler(value = {ConstraintViolationException.class, MethodArgumentNotValidException.class,
-            MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class})
-    public CloudStorageError handleInputDataException(HttpServletRequest request, RuntimeException e) {
+    @ExceptionHandler(value = {ConstraintViolationException.class,
+            MissingServletRequestParameterException.class, MethodArgumentTypeMismatchException.class, MethodArgumentNotValidException.class})
+    public CloudStorageError handleInputDataException(HttpServletRequest request, Exception e) {
         LOGGER.error(request.getRequestURI() + ": InputDataException: " + e.getMessage());
 
         CloudStorageError error = new CloudStorageError();

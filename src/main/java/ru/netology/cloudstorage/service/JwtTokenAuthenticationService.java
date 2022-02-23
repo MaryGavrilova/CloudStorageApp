@@ -11,10 +11,7 @@ import io.jsonwebtoken.security.SecurityException;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.netology.cloudstorage.model.BlackListToken;
 import ru.netology.cloudstorage.model.User;
-import ru.netology.cloudstorage.repository.BlackListTokensRepository;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.security.Key;
@@ -30,7 +27,6 @@ public class JwtTokenAuthenticationService {
     private static final Key KEY = new SecretKeySpec(Base64.getDecoder().decode(SECRET),
             SignatureAlgorithm.HS256.getJcaName());
     private static final int TOKEN_EXPIRATION_PERIOD = 30 * 60 * 1000; // 30 min
-    private final BlackListTokensRepository blackListTokensRepository;
 
     // generating new token for user
     public String generateToken(User user) {
@@ -62,27 +58,11 @@ public class JwtTokenAuthenticationService {
     // checking token for absence in black list and possibility of decryption
     public boolean validateToken(String token) {
         try {
-            if (isTokenInBlackList(token)) {
-                return false;
-            }
             parseToken(token);
             return true;
         } catch (SecurityException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException e) {
             LOGGER.error(e.getMessage());
         }
         return false;
-    }
-
-    // in case of logout - adding token in black list
-    @Transactional
-    public boolean addTokenInBlackList(String token) {
-        BlackListToken blackListToken = BlackListToken.builder().token(token).build();
-        blackListTokensRepository.save(blackListToken);
-        return true;
-    }
-
-    // checking token for presence in black list
-    public boolean isTokenInBlackList(String token) {
-        return !blackListTokensRepository.findAllByToken(token).isEmpty();
     }
 }

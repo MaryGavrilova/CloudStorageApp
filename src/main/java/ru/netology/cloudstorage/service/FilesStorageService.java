@@ -63,10 +63,10 @@ public class FilesStorageService {
         User user = getCurrentUser();
         CloudFile cloudFile = filesRepository.findCloudFileByUserAndFilename(user, currentFileName)
                 .orElseThrow(() -> new CloudFileNotFoundException("Error edit file: Incorrect file name, file is not found"));
-        if (filesRepository.findCloudFileByUserAndFilename(user, newCloudFileName.getName()).isPresent()) {
+        if (filesRepository.findCloudFileByUserAndFilename(user, newCloudFileName.getFilename()).isPresent()) {
             throw new DataValidationException("Error edit file: Incorrect new file name, file this such name already exists");
         }
-        filesRepository.editFileName(newCloudFileName.getName(), cloudFile.getId());
+        filesRepository.editFileName(newCloudFileName.getFilename(), cloudFile.getId());
         return true;
     }
 

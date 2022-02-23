@@ -16,7 +16,7 @@ import javax.validation.Valid;
 
 @RestController
 @Validated
-@RequestMapping("/cloud")
+//@RequestMapping("/cloud")
 @RequiredArgsConstructor
 public class UsersAuthenticationController {
 
@@ -34,12 +34,6 @@ public class UsersAuthenticationController {
         User user = (User) authenticate.getPrincipal();
 
         return new AuthorizationToken(jwtTokenAuthenticationService.generateToken(user));
-    }
-
-    // log out in cloud storage by token
-    @PostMapping("/logout")
-    public void logout(@RequestHeader("auth-token") String authToken) {
-        jwtTokenAuthenticationService.addTokenInBlackList(authToken);
     }
 
     // sign in cloud storage by creating login and password

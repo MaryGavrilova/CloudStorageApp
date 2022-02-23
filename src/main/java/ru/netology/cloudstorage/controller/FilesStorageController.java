@@ -1,7 +1,9 @@
 package ru.netology.cloudstorage.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,24 +21,28 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 @Validated
-@RequestMapping("/cloud")
+//@RequestMapping("/cloud")
 public class FilesStorageController {
     private final FilesStorageService filesStorageService;
 
     // upload file to cloud storage
     @PostMapping(path = "/file", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public void uploadFile(@RequestHeader("auth-token") String authToken,
-                           @RequestParam("filename") @NotBlank String fileName,
-                           @RequestParam("file") @NotNull MultipartFile file) throws IOException {
+    public ResponseEntity<String> uploadFile(@RequestHeader("auth-token") String authToken,
+                                             @RequestParam("filename") @NotBlank String fileName,
+                                             @RequestParam("file") @NotNull MultipartFile file) throws IOException {
 
         filesStorageService.storeFile(fileName, file);
+       return new ResponseEntity<>("File is uploaded successfully",
+                HttpStatus.OK);
     }
 
     // delete file in cloud storage
     @DeleteMapping("/file")
-    public void deleteFile(@RequestHeader("auth-token") String authToken,
+    public ResponseEntity<String> deleteFile(@RequestHeader("auth-token") String authToken,
                            @RequestParam("filename") @NotBlank String fileName) {
         filesStorageService.deleteFile(fileName);
+        return new ResponseEntity<>("File is deleted successfully",
+                HttpStatus.OK);
     }
 
     // download file from cloud storage
@@ -49,10 +55,12 @@ public class FilesStorageController {
 
     // edit file name in cloud storage
     @PutMapping("/file")
-    public void editFileName(@RequestHeader("auth-token") String authToken,
+    public ResponseEntity<String> editFileName(@RequestHeader("auth-token") String authToken,
                              @RequestParam("filename") @NotBlank String currentFileName,
                              @Valid @RequestBody CloudFileName newCloudFileName) {
         filesStorageService.editFileName(currentFileName, newCloudFileName);
+        return new ResponseEntity<>("File name  is edited successfully",
+                HttpStatus.OK);
     }
 
     // get limited file list

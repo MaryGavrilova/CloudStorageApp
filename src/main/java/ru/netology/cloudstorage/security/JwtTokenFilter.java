@@ -30,18 +30,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         // Get jwt token and validate
         final String token = request.getHeader("auth-token");
-        if (token == null || token.isEmpty()) {
+        if (token == null || !token.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
         }
-        if (!jwtTokenAuthenticationService.validateToken(token)) {
+
+        final String jwtToken = token.split(" ")[1].trim();
+        if (!jwtTokenAuthenticationService.validateToken(jwtToken)) {
             chain.doFilter(request, response);
             return;
         }
 
         // Get user identity and set it on the spring security context
         UserDetails userDetails = usersRepository
-                .findByUsername(jwtTokenAuthenticationService.getUsername(token))
+                .findByUsername(jwtTokenAuthenticationService.getUsername(jwtToken))
                 .orElse(null);
 
         UsernamePasswordAuthenticationToken

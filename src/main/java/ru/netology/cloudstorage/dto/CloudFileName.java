@@ -14,5 +14,5 @@ import javax.validation.constraints.NotBlank;
 @Validated
 public class CloudFileName {
     @NotBlank
-    protected String name;
+    protected String filename;
 }

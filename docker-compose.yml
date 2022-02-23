@@ -1,0 +1,29 @@
+version: "3.7"
+services:
+  app-mysqldb:
+    image: mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=cloudstorage
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+    ports:
+      - "3306:3306"
+    volumes:
+      - C:/Users/marzuz/NetologyProjects/CloudStorage/mysql_data:/var/lib/mysql
+  app:
+    build: .
+    restart: always
+    container_name: app-backend
+    ports:
+      - "8888:8888"
+    depends_on:
+      - app-mysqldb
+    environment:
+      - DATABASE_HOST=app-mysqldb
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=cloudstorage
+      - DATABASE_PORT=3306
+      - SPRING_DATASOURCE_URL=jdbc:mysql://app-mysqldb:3306/cloudstorage?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true
