@@ -21,6 +21,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @Service
 public class JwtTokenAuthenticationService {
+
     private static final Logger LOGGER = Logger.getLogger(JwtTokenAuthenticationService.class);
 
     private static final String SECRET = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
@@ -49,10 +50,6 @@ public class JwtTokenAuthenticationService {
     // getting username from token
     public String getUsername(String token) {
         return (String) parseToken(token).getBody().get("username");
-    }
-
-    public Date getExpirationDate(String token) {
-        return parseToken(token).getBody().getExpiration();
     }
 
     // checking token for absence in black list and possibility of decryption

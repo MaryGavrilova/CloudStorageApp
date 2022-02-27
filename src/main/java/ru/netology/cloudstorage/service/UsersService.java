@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UsersService {
+
     public static final String DEFAULT_ROLE = "ROLE_USER";
     private final UsersRepository usersRepository;
     private final PasswordEncoder passwordEncoder;
@@ -22,12 +23,13 @@ public class UsersService {
         if (usersRepository.findByUsername(identity.getLogin()).isPresent()) {
             throw new DataValidationException("Error create user account: Incorrect user name, user with such name already exists");
         }
+        String encodedPassword = passwordEncoder.encode(identity.getPassword());
         User user = User.builder()
                 .username(identity.getLogin())
-                .password(passwordEncoder.encode(identity.getPassword()))
+                .password(encodedPassword)
                 .role(DEFAULT_ROLE)
                 .build();
-        usersRepository.save(user);
-        return user;
+        return usersRepository.save(user);
     }
 }
+

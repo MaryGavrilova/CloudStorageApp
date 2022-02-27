@@ -23,30 +23,30 @@ public class FilesStorageService {
 
     // creating file object and saving it in database
     @Transactional
-    public boolean storeFile(String fileName, MultipartFile multipartFile) throws IOException {
+    public CloudFile storeFile(String fileName, MultipartFile multipartFile) throws IOException {
         User user = getCurrentUser();
         if (filesRepository.findCloudFileByUserAndFilename(user, fileName).isPresent()) {
             throw new DataValidationException("Error store file: Incorrect file name, file this such name already exists");
         }
-        filesRepository.save(CloudFile.builder()
+        CloudFile cloudFile = CloudFile.builder()
                 .filename(fileName)
                 .originalFilename(multipartFile.getOriginalFilename())
                 .size(multipartFile.getSize())
                 .contentType(multipartFile.getContentType())
                 .bytes(multipartFile.getBytes())
                 .user(user)
-                .build());
-        return true;
+                .build();
+        return filesRepository.save(cloudFile);
     }
 
     // finding file object in database and deleting it
     @Transactional
-    public boolean deleteFile(String fileName) {
+    public CloudFile deleteFile(String fileName) {
         User user = getCurrentUser();
         CloudFile cloudFile = filesRepository.findCloudFileByUserAndFilename(user, fileName)
                 .orElseThrow(() -> new CloudFileNotFoundException("Error delete file: Incorrect file name, file is not found"));
         filesRepository.deleteById(cloudFile.getId());
-        return true;
+        return cloudFile;
     }
 
     // finding file object in database and returning it
@@ -59,7 +59,7 @@ public class FilesStorageService {
 
     // finding file object in database anf editing its name
     @Transactional
-    public boolean editFileName(String currentFileName, CloudFileName newCloudFileName) {
+    public String editFileName(String currentFileName, CloudFileName newCloudFileName) {
         User user = getCurrentUser();
         CloudFile cloudFile = filesRepository.findCloudFileByUserAndFilename(user, currentFileName)
                 .orElseThrow(() -> new CloudFileNotFoundException("Error edit file: Incorrect file name, file is not found"));
@@ -67,7 +67,7 @@ public class FilesStorageService {
             throw new DataValidationException("Error edit file: Incorrect new file name, file this such name already exists");
         }
         filesRepository.editFileName(newCloudFileName.getFilename(), cloudFile.getId());
-        return true;
+        return newCloudFileName.getFilename();
     }
 
     // finding all file objects and returning list of files' information
