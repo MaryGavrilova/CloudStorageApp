@@ -8,6 +8,8 @@
 * [Technologies used](#technologies-used)
 * [Building the project](#building-the-project)
 * [Try it out with FRONT](#try-it-out-with-front)
+* [Usage](#usage)
+* [Demo images](#demo-images)
 * [Tests](#tests)
 
 ## General Information
@@ -17,7 +19,7 @@ This project is a backend service which can be connected to the frontend web app
 ## Features
 * User authorization
 * Listing the files
-* Uploading a file
+* Uploading a file (max 10MB)
 * Changing the file name
 * Downloading a file
 * Deleting a file
@@ -65,7 +67,7 @@ The application uses MySQL database. Users’ and files’ data are stored in da
 1.	Clone the project from GitHub
 2.	Build a jar file using `mvn clean install`
 3.	Run it using `mvn spring-boot:run`
-4.	Connect it to the database using `docker run -e MYSQL_ROOT_PASSWORD=root MYSQL_DATABASE=cloudstorage -p 3306:3306 mysql`
+4.	Connect it to the database using `docker run -e MYSQL_USER=cloudstorageadmin MYSQL_ROOT_PASSWORD=root MYSQL_PASSWORD=cloudstoragepassword MYSQL_DATABASE=cloudstorage -p 3306:3306 mysql`
 
 **Steps to run with Docker Compose from the command line:**
 1.	Clone the project from GitHub
@@ -80,14 +82,89 @@ The application uses MySQL database. Users’ and files’ data are stored in da
 
 **Steps to run FRONT:**
 1.	Install NodeJS (version 14.15.0 or higher) on your computer following the [instructions](https://nodejs.org/en/download/)
-2.	Download [FRONT (JavaScript)]( https://github.com/netology-code/jd-homeworks/tree/master/diploma/netology-diplom-frontend)
+2.	Download [FRONT (JavaScript)](https://github.com/netology-code/jd-homeworks/tree/master/diploma/netology-diplom-frontend)
 3.	Go to the FRONT folder of the application and run all the commands from it
 4.	Change URL to call backend service: in the .env FRONT file (located at the root of the project) `VUE_APP_BASE_URL=http://localhost:8888`
 5.	Rebuild FRONT again: `npm run build`
-6.	Run FRONT following the README.md FRONT description
+6.	Run FRONT following the README.md FRONT description: `npm install` затем `npm run serve`
+
+## Usage
+* Default login: `default-login`
+* Default password: `password`
+### REST APIs Endpoints
+#### To sign in
+```
+POST /signin
+Content-Type: application/json
+
+{  
+  "login": "gavrilova_mary@gmail.com",
+  "password": "password123456"
+}
+```
+#### To login
+```
+POST /login
+Content-Type: application/json
+
+{  
+  "login": "gavrilova_mary@gmail.com",
+  "password": "password123456"
+}
+```
+#### To log out
+```
+POST /logout
+Content-Type: application/json
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+```
+#### To upload file
+```
+POST /file?filename=contacts
+Content-Type: multipart/form-data
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+```
+Add file to request body
+
+#### To edit file name
+```
+PUT /file?filename=contacts
+Content-Type: application/json
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+
+{
+    "filename": "newcontacts"
+}
+```
+#### To get file
+```
+GET /file?filename=contacts
+Content-Type: application/json
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+```
+#### To delete file
+```
+DELETE /file?filename=contacts
+Content-Type: application/json
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+```
+#### To get file list
+```
+GET /list?limit=3
+Content-Type: application/json
+auth-token: Bearer eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImdhdnJpbG92YV9tYXJ5QGdtYWlsLmNvbSIsImlhdCI6MTY0NjY1ODA0NCwiZXhwIjoxNjQ2NjU5ODQ0fQ.96uIQ-QEdB2YkkbMoWOMxCX_b7pT4MJ0QaW4CBJrMM
+```
+
+## Demo images
+### Authorization page
+![](https://github.com/MaryGavrilova/CloudStorageApp/blob/master/demo/demo-start.JPG)
+---
+### Personal account page
+![](https://github.com/MaryGavrilova/CloudStorageApp/blob/master/demo/demo-use.JPG)
+
 
 ## Tests
-The repository contains a lot of unit test cases (with using JUnit, Mockito and Testcontainers libraries) to cover service and DAO layers.
+The GitHub repository contains a lot of unit test cases (with using JUnit, Mockito and Testcontainers libraries) to cover service and DAO layers. Also the backend service was tested with Postman requests and with connected front application.
 
 
 
