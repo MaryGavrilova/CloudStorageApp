@@ -79,4 +79,13 @@ public class User implements UserDetails, Serializable {
     public int hashCode() {
         return Objects.hash(id, username, password);
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

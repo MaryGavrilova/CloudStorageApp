@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.netology.cloudstorage.service.UsersService.DEFAULT_ROLE;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestFilesStorageService {
+public class FilesStorageServiceTest {
     @InjectMocks
     FilesStorageService filesStorageService;
 

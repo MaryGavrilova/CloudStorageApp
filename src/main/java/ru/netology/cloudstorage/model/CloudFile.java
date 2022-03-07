@@ -34,7 +34,7 @@ public class CloudFile {
     protected long size;
 
     @Lob
-    @Column(name = "file", columnDefinition = "BLOB")
+    @Column(name = "file", columnDefinition = "MEDIUMBLOB")
     protected byte[] bytes;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -54,5 +54,15 @@ public class CloudFile {
         int result = Objects.hash(id, filename, originalFilename, contentType, size);
         result = 31 * result + Arrays.hashCode(bytes);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CloudFile{" +
+                "filename='" + filename + '\'' +
+                ", originalFilename='" + originalFilename + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", size=" + size +
+                '}';
     }
 }

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static ru.netology.cloudstorage.service.UsersService.DEFAULT_ROLE;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestJwtTokenAuthenticationService {
+public class JwtTokenAuthenticationServiceTest {
     private static final String TEST_SECRET = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
     private static final Key TEST_KEY = new SecretKeySpec(Base64.getDecoder().decode(TEST_SECRET),
             SignatureAlgorithm.HS256.getJcaName());

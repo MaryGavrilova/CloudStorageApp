@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.netology.cloudstorage.service.UsersService.DEFAULT_ROLE;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TestUsersService {
+public class UsersServiceTest {
     @InjectMocks
     UsersService usersService;
 
